@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Campus Éco — ENSA Béni Mellal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300;0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;0,14..32,900;1,14..32,400&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<!-- ── NAVBAR ── -->
+<nav>
+  <div class="nbrand">
+    <img src="ensa-logo.png" alt="ENSA Béni Mellal" class="nensa-logo"/>
+  </div>
+
+  <div class="nstats">
+    <div class="nchip">
+      <svg class="nchip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      <span class="nval" id="s-t">0</span>
+      <span class="nlbl">Total</span>
+    </div>
+    <div class="nchip nchip-amber">
+      <svg class="nchip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span class="nval" id="s-n">0</span>
+      <span class="nlbl">Nouveaux</span>
+    </div>
+    <div class="nchip nchip-blue">
+      <svg class="nchip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
+      <span class="nval" id="s-c">0</span>
+      <span class="nlbl">En cours</span>
+    </div>
+    <div class="nchip nchip-green">
+      <svg class="nchip-icon" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+      <span class="nval" id="s-d">0</span>
+      <span class="nlbl">Traités</span>
+    </div>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<section class="hero reveal">
+  <div class="hero-badge">
+    <span class="hero-dot"></span>
+    Signalement écologique en temps réel
+  </div>
+  <h1>Construisons un campus<br><span class="hl">plus vert</span>, ensemble.</h1>
+  <p>Signalez les problèmes environnementaux sur le campus de l'ENSA Béni Mellal et recevez des suggestions éco-responsables générées instantanément.</p>
+</section>
+
+<!-- ── STATS ── -->
+<section class="stats-section reveal" style="transition-delay:.04s">
+  <div class="card">
+    <div class="chdr">
+      <div class="chdr-l">
+        <div class="cico">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/>
+            <line x1="6" y1="20" x2="6" y2="14"/>
+          </svg>
+        </div>
+        <div>
+          <div class="ctitle">Statistiques</div>
+          <div class="csub">Vue d'ensemble du campus</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cbody">
+      <!-- KPIs -->
+      <div class="stats-kpis">
+        <div class="kpi">
+          <div class="kpi-val" id="stat-total">—</div>
+          <div class="kpi-lbl">Total</div>
+        </div>
+        <div class="kpi kpi-amber">
+          <div class="kpi-val" id="stat-nouveau">—</div>
+          <div class="kpi-lbl">Nouveaux</div>
+        </div>
+        <div class="kpi kpi-blue">
+          <div class="kpi-val" id="stat-encours">—</div>
+          <div class="kpi-lbl">En cours</div>
+        </div>
+        <div class="kpi kpi-green">
+          <div class="kpi-val" id="stat-traite">—</div>
+          <div class="kpi-lbl">Traités</div>
+        </div>
+      </div>
+
+      <!-- Bar chart par type -->
+      <div class="stats-chart-wrap">
+        <div class="stats-chart-title">Répartition par type de problème</div>
+        <canvas id="statsChart" height="130"></canvas>
+      </div>
+
+      <!-- Taux de résolution -->
+      <div class="stats-taux">
+        <div class="stats-taux-hdr">
+          <span class="stats-taux-lbl">Taux de résolution</span>
+          <span class="stats-taux-val" id="stat-taux">—</span>
+        </div>
+        <div class="stats-progress-track">
+          <div class="stats-progress-bar" id="stat-progress-bar" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── GRID ── -->
+<main class="mgrid">
+
+  <!-- FORMULAIRE -->
+  <div class="reveal" style="transition-delay:.08s">
+    <div class="card">
+      <div class="chdr">
+        <div class="chdr-l">
+          <div class="cico">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="ctitle">Nouveau signalement</div>
+            <div class="csub">Décrivez le problème observé</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cbody">
+        <div class="fg">
+          <label for="type">Type de problème</label>
+          <div class="select-wrap">
+            <select id="type">
+              <option value="eau">💧 Fuite d'eau / Robinet ouvert</option>
+              <option value="lumiere">💡 Lumière inutilement allumée</option>
+              <option value="energie">⚡ Gaspillage d'énergie</option>
+              <option value="dechets">♻️ Problème de déchets</option>
+              <option value="autre">📌 Autre problème écologique</option>
+            </select>
+            <svg class="select-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+        </div>
+
+        <div class="fg">
+          <label for="desc">Description du problème</label>
+          <textarea id="desc" placeholder="Ex : Le robinet des toilettes du bâtiment A coule en permanence depuis ce matin…"></textarea>
+        </div>
+
+        <label class="anon-row">
+          <input type="checkbox" id="anonyme"/>
+          <span class="anon-check"></span>
+          <span class="anon-label">
+            <span class="anon-title">Soumettre anonymement</span>
+            <span class="anon-hint">Votre identité ne sera pas affichée</span>
+          </span>
+        </label>
+
+        <button class="btn rip-wrap" id="sbtn" onclick="ajouter(event)">
+          <span id="bico">➕</span>
+          <span id="blbl">Envoyer le signalement</span>
+        </button>
+
+        <div class="sugbox" id="sugbox">
+          <div class="sug-lbl">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+            Conseil éco-responsable
+          </div>
+          <div class="sug-txt" id="sugtxt"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LISTE -->
+  <div class="reveal" style="transition-delay:.16s">
+    <div class="card">
+      <div class="chdr">
+        <div class="chdr-l">
+          <div class="cico">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>
+          </div>
+          <div>
+            <div class="ctitle">Signalements</div>
+            <div class="csub">Campus ENSA Béni Mellal</div>
+          </div>
+        </div>
+        <span class="ccnt" id="ccnt">0 signalement</span>
+      </div>
+
+      <div class="fbar">
+        <div class="fgroup">
+          <button class="fbtn rip-wrap active" onclick="filtrer('tous',this)">Tous</button>
+          <button class="fbtn rip-wrap fbtn-amber" onclick="filtrer('nouveau',this)">Nouveau</button>
+          <button class="fbtn rip-wrap fbtn-blue"  onclick="filtrer('en_cours',this)">En cours</button>
+          <button class="fbtn rip-wrap fbtn-green" onclick="filtrer('traité',this)">Traité</button>
+        </div>
+      </div>
+
+      <div class="slist" id="liste">
+        <div class="empty">
+          <div class="empty-i">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity=".35"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <p>Chargement des signalements…</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="tdot"></span>
+  <span id="tmsg"></span>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
