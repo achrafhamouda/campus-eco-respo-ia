@@ -118,11 +118,14 @@ function render(data) {
     const dateStr = fd(item.date_creation || item.created_at);
 
     const acts = st === 'traité'
-      ? `<span class="resolved-lbl">✅ Résolu</span>`
+      ? `<span class="resolved-lbl">✅ Résolu</span>
+         <button class="btn btn-sm btn-danger rip-wrap" onclick="supprimer(${item.id},event)">🗑️ Supprimer</button>`
       : st === 'en_cours'
-      ? `<button class="btn btn-sm btn-ok rip-wrap" onclick="chSt(${item.id},'traité',event)">✅ Marquer traité</button>`
+      ? `<button class="btn btn-sm btn-ok rip-wrap" onclick="chSt(${item.id},'traité',event)">✅ Marquer traité</button>
+         <button class="btn btn-sm btn-danger rip-wrap" onclick="supprimer(${item.id},event)">🗑️ Supprimer</button>`
       : `<button class="btn btn-sm btn-blue rip-wrap" onclick="chSt(${item.id},'en_cours',event)">🔵 En cours</button>
-         <button class="btn btn-sm btn-ok rip-wrap"  onclick="chSt(${item.id},'traité',event)">✅ Traité</button>`;
+         <button class="btn btn-sm btn-ok rip-wrap"  onclick="chSt(${item.id},'traité',event)">✅ Traité</button>
+         <button class="btn btn-sm btn-danger rip-wrap" onclick="supprimer(${item.id},event)">🗑️ Supprimer</button>`;
 
     return `<div class="sitem" id="si-${item.id}">
       <div class="sdot ${dc}"></div>
@@ -244,6 +247,34 @@ async function chSt(id, st, e) {
     await chargerStats();
   } catch (err) {
     toast('Erreur lors de la mise à jour ❌', 'r');
+  }
+}
+
+// ── SUPPRIMER SIGNALEMENT ──
+async function supprimer(id, e) {
+  if (!confirm('⚠️ Êtes-vous sûr de vouloir supprimer ce signalement ?')) {
+    return;
+  }
+
+  try {
+    const res = await fetch(`/signalement/${id}`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' }
+    });
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || 'Erreur');
+    }
+    const sitem = document.getElementById(`si-${id}`);
+    if (sitem) {
+      sitem.style.animation = 'fadeOut 0.3s ease-out';
+      setTimeout(() => sitem.remove(), 300);
+    }
+    toast('🗑️ Signalement supprimé !', 'g');
+    await charger();
+    await chargerStats();
+  } catch (err) {
+    toast('Erreur lors de la suppression ❌', 'r');
   }
 }
 

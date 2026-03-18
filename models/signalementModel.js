@@ -30,4 +30,11 @@ const getStatsRows = async () => {
   return result.rows;
 };
 
-module.exports = { creerSignalement, getSignalements, updateStatut, getStatsRows };
+const supprimerSignalement = async (id) => {
+  return pool.query(
+    `DELETE FROM signalements WHERE id=$1 RETURNING *`,
+    [id]
+  );
+};
+
+module.exports = { creerSignalement, getSignalements, updateStatut, getStatsRows, supprimerSignalement };

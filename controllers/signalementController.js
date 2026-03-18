@@ -1,4 +1,4 @@
-const { creerSignalement, getSignalements, updateStatut, getStatsRows } = require('../models/signalementModel');
+const { creerSignalement, getSignalements, updateStatut, getStatsRows, supprimerSignalement } = require('../models/signalementModel');
 
 const STATUTS_VALIDES = ['nouveau', 'en_cours', 'traité'];
 const TYPES_VALIDES   = ['eau', 'lumiere', 'energie', 'dechets', 'autre'];
@@ -119,5 +119,26 @@ exports.update = async (req, res) => {
   } catch (err) {
     console.error('Erreur mise à jour statut:', err.message);
     res.status(500).json({ error: "Erreur serveur lors de la mise à jour." });
+  }
+};
+
+// ── DELETE /signalement/:id ──
+exports.delete = async (req, res) => {
+  const id = parseInt(req.params.id);
+
+  if (!id || isNaN(id)) {
+    return res.status(400).json({ error: "ID invalide." });
+  }
+
+  try {
+    const result = await supprimerSignalement(id);
+    if (!result.rows.length) {
+      return res.status(404).json({ error: "Signalement introuvable." });
+    }
+    console.log('[DELETE /signalement/:id] Supprimé id:', id);
+    res.json({ success: true, message: "Signalement supprimé avec succès.", deleted: result.rows[0] });
+  } catch (err) {
+    console.error('Erreur suppression signalement:', err.message);
+    res.status(500).json({ error: "Erreur serveur lors de la suppression." });
   }
 };
