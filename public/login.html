@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Administration — Campus Éco-Respo</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --g900: #1B4332;
+      --g700: #2D6A4F;
+      --g500: #52B788;
+      --g200: #B7E4C7;
+      --g100: #D8F3DC;
+      --white: #FFFFFF;
+      --gray50: #F9FAFB;
+      --gray200: #E5E7EB;
+      --gray400: #9CA3AF;
+      --gray700: #374151;
+      --gray900: #111827;
+      --red: #EF4444;
+      --serif: 'DM Serif Display', Georgia, serif;
+      --sans: 'DM Sans', system-ui, sans-serif;
+    }
+
+    html, body { height: 100%; font-family: var(--sans); }
+
+    /* ── LAYOUT ── */
+    .wrap {
+      display: flex;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    /* ── LEFT PANEL ── */
+    .panel-left {
+      width: 42%;
+      background: var(--g700);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 3rem 3.5rem;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    /* Decorative circles */
+    .panel-left::before {
+      content: '';
+      position: absolute;
+      width: 380px;
+      height: 380px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.04);
+      bottom: -120px;
+      right: -100px;
+    }
+    .panel-left::after {
+      content: '';
+      position: absolute;
+      width: 240px;
+      height: 240px;
+      border-radius: 50%;
+      background: rgba(255,255,255,.05);
+      top: -80px;
+      left: -60px;
+    }
+
+    .pl-top { position: relative; z-index: 1; }
+
+    .pl-logo {
+      display: flex;
+      align-items: center;
+      gap: .75rem;
+      margin-bottom: 4rem;
+    }
+    .pl-logo-icon {
+      width: 42px;
+      height: 42px;
+      background: rgba(255,255,255,.15);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pl-logo-name {
+      font-family: var(--serif);
+      font-size: 1.1rem;
+      color: rgba(255,255,255,.9);
+      letter-spacing: .01em;
+    }
+
+    .pl-headline {
+      font-family: var(--serif);
+      font-size: clamp(2.6rem, 4vw, 3.8rem);
+      color: var(--white);
+      line-height: 1.05;
+      letter-spacing: -.02em;
+      margin-bottom: 1.5rem;
+    }
+    .pl-headline em {
+      font-style: italic;
+      color: var(--g200);
+    }
+
+    .pl-sub {
+      font-size: .95rem;
+      color: rgba(255,255,255,.65);
+      line-height: 1.65;
+      max-width: 320px;
+      font-weight: 300;
+    }
+
+    .pl-bottom { position: relative; z-index: 1; }
+
+    .pl-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: .5rem;
+    }
+    .pl-tag {
+      background: rgba(255,255,255,.1);
+      color: rgba(255,255,255,.8);
+      border: 1px solid rgba(255,255,255,.15);
+      border-radius: 20px;
+      padding: .3rem .85rem;
+      font-size: .78rem;
+      font-weight: 500;
+      letter-spacing: .02em;
+    }
+
+    /* Leaf grid decoration */
+    .leaf-grid {
+      position: absolute;
+      right: 2.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      opacity: .12;
+    }
+    .leaf-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: white;
+    }
+
+    /* ── RIGHT PANEL ── */
+    .panel-right {
+      flex: 1;
+      background: var(--white);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 3rem 2rem;
+      overflow-y: auto;
+    }
+
+    .form-wrap {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .form-eyebrow {
+      font-size: .75rem;
+      font-weight: 600;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      color: var(--g500);
+      margin-bottom: 1rem;
+    }
+
+    .form-title {
+      font-family: var(--serif);
+      font-size: 2.2rem;
+      color: var(--gray900);
+      line-height: 1.15;
+      letter-spacing: -.02em;
+      margin-bottom: .6rem;
+    }
+
+    .form-sub {
+      font-size: .9rem;
+      color: var(--gray400);
+      font-weight: 400;
+      margin-bottom: 2.5rem;
+      line-height: 1.55;
+    }
+
+    /* ── FIELD ── */
+    .field {
+      position: relative;
+      margin-bottom: 1.4rem;
+    }
+
+    .field label {
+      display: block;
+      font-size: .82rem;
+      font-weight: 600;
+      color: var(--gray700);
+      margin-bottom: .5rem;
+      letter-spacing: .01em;
+      transition: color .2s;
+    }
+
+    .field:focus-within label {
+      color: var(--g700);
+    }
+
+    .field input {
+      width: 100%;
+      padding: .85rem 1rem;
+      border: 1.5px solid var(--gray200);
+      border-radius: 10px;
+      font-family: var(--sans);
+      font-size: .95rem;
+      color: var(--gray900);
+      background: var(--gray50);
+      outline: none;
+      transition: border-color .25s, box-shadow .25s, background .25s;
+      -webkit-appearance: none;
+    }
+
+    .field input:focus {
+      border-color: var(--g700);
+      background: var(--white);
+      box-shadow: 0 0 0 3px rgba(45,106,79,.12);
+    }
+
+    .field input::placeholder { color: var(--gray400); }
+
+    .field-icon {
+      position: absolute;
+      right: .9rem;
+      bottom: .85rem;
+      color: var(--gray400);
+      pointer-events: none;
+      transition: color .25s;
+    }
+    .field:focus-within .field-icon { color: var(--g500); }
+
+    /* Password toggle */
+    .pw-toggle {
+      position: absolute;
+      right: .9rem;
+      bottom: .85rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: var(--gray400);
+      display: flex;
+      align-items: center;
+      padding: 0;
+      transition: color .2s;
+    }
+    .pw-toggle:hover { color: var(--g700); }
+
+    /* ── SUBMIT BUTTON ── */
+    .btn-login {
+      width: 100%;
+      padding: .95rem 1.5rem;
+      background: var(--g700);
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      font-family: var(--sans);
+      font-size: .95rem;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: .02em;
+      transition: background .2s, transform .15s, box-shadow .2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: .6rem;
+      margin-top: .4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .btn-login:hover {
+      background: var(--g900);
+      box-shadow: 0 6px 20px rgba(45,106,79,.35);
+      transform: translateY(-1px);
+    }
+    .btn-login:active { transform: translateY(0); }
+    .btn-login:disabled { opacity: .7; cursor: not-allowed; transform: none; }
+
+    /* Button ripple */
+    .btn-login::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0);
+      transition: background .3s;
+    }
+    .btn-login:active::after { background: rgba(255,255,255,.08); }
+
+    /* Spinner */
+    .spin {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin .6s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── ERROR ── */
+    .error-box {
+      display: none;
+      align-items: center;
+      gap: .6rem;
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      border-radius: 8px;
+      padding: .75rem 1rem;
+      margin-top: 1rem;
+      font-size: .85rem;
+      color: #DC2626;
+      font-weight: 500;
+    }
+    .error-box.show { display: flex; }
+
+    /* ── DIVIDER ── */
+    .form-footer {
+      margin-top: 2rem;
+      text-align: center;
+      font-size: .82rem;
+      color: var(--gray400);
+    }
+    .form-footer a {
+      color: var(--g700);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .form-footer a:hover { text-decoration: underline; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      .wrap { flex-direction: column; }
+      .panel-left {
+        width: 100%;
+        height: auto;
+        padding: 2.5rem 2rem;
+        min-height: 220px;
+      }
+      .pl-headline { font-size: 2.2rem; margin-bottom: 1rem; }
+      .pl-sub { display: none; }
+      .pl-bottom { display: none; }
+      .leaf-grid { display: none; }
+      .panel-right { padding: 2.5rem 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <!-- ── LEFT PANEL ── -->
+  <div class="panel-left">
+    <div class="pl-top">
+      <div class="pl-logo">
+        <div class="pl-logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+          </svg>
+        </div>
+        <span class="pl-logo-name">Campus Éco-Respo</span>
+      </div>
+
+      <h1 class="pl-headline">
+        Gérez le<br>campus<br><em>différemment.</em>
+      </h1>
+
+      <p class="pl-sub">
+        Tableau de bord administrateur pour la gestion des signalements environnementaux — ENSA Béni Mellal.
+      </p>
+    </div>
+
+    <div class="pl-bottom">
+      <div class="pl-tags">
+        <span class="pl-tag">💧 Eau</span>
+        <span class="pl-tag">💡 Lumière</span>
+        <span class="pl-tag">⚡ Énergie</span>
+        <span class="pl-tag">♻️ Déchets</span>
+      </div>
+    </div>
+
+    <!-- Decorative dot grid -->
+    <div class="leaf-grid" aria-hidden="true">
+      <div class="leaf-dot"></div><div class="leaf-dot"></div><div class="leaf-dot"></div><div class="leaf-dot"></div>
+      <div class="leaf-dot"></div><div class="leaf-dot"></div><div class="leaf-dot"></div><div class="leaf-dot"></div>
+      <div class="leaf-dot"></div><div class="leaf-dot"></div><div class="leaf-dot"></div><div class="leaf-dot"></div>
+      <div class="leaf-dot"></div><div class="leaf-dot"></div><div class="leaf-dot"></div><div class="leaf-dot"></div>
+      <div class="leaf-dot"></div><div class="leaf-dot"></div><div class="leaf-dot"></div><div class="leaf-dot"></div>
+      <div class="leaf-dot"></div><div class="leaf-dot"></div><div class="leaf-dot"></div><div class="leaf-dot"></div>
+    </div>
+  </div>
+
+  <!-- ── RIGHT PANEL ── -->
+  <div class="panel-right">
+    <div class="form-wrap">
+      <div class="form-eyebrow">Accès restreint</div>
+      <h2 class="form-title">Administration</h2>
+      <p class="form-sub">Connectez-vous pour accéder au tableau de bord de gestion.</p>
+
+      <form id="loginForm" onsubmit="doLogin(event)" novalidate>
+        <div class="field">
+          <label for="username">Identifiant</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            placeholder="admin"
+            autocomplete="username"
+            required
+          />
+          <svg class="field-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M20 21a8 8 0 1 0-16 0"/></svg>
+        </div>
+
+        <div class="field">
+          <label for="password">Mot de passe</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+            required
+          />
+          <button type="button" class="pw-toggle" id="pwToggle" onclick="togglePw()" title="Afficher/masquer">
+            <svg id="eyeIcon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+
+        <button type="submit" class="btn-login" id="btnLogin">
+          <span id="btnIcon">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><path d="M10 14 21 3"/><path d="M21 15v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+          </span>
+          <span id="btnText">Se connecter</span>
+        </button>
+
+        <div class="error-box" id="errorBox">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <span id="errorMsg">Identifiants incorrects</span>
+        </div>
+      </form>
+
+      <div class="form-footer">
+        <a href="/">← Retour à l'interface étudiante</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  function togglePw() {
+    const pw = document.getElementById('password');
+    const icon = document.getElementById('eyeIcon');
+    if (pw.type === 'password') {
+      pw.type = 'text';
+      icon.innerHTML = '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>';
+    } else {
+      pw.type = 'password';
+      icon.innerHTML = '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+    }
+  }
+
+  async function doLogin(e) {
+    e.preventDefault();
+    const username = document.getElementById('username').value.trim();
+    const password = document.getElementById('password').value;
+    const btn      = document.getElementById('btnLogin');
+    const btnIcon  = document.getElementById('btnIcon');
+    const btnText  = document.getElementById('btnText');
+    const errBox   = document.getElementById('errorBox');
+
+    if (!username || !password) {
+      showError('Veuillez remplir tous les champs.');
+      return;
+    }
+
+    btn.disabled = true;
+    btnIcon.innerHTML = '<div class="spin"></div>';
+    btnText.textContent = 'Connexion…';
+    errBox.classList.remove('show');
+
+    try {
+      const res = await fetch('/admin/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+      const data = await res.json();
+
+      if (res.ok && data.success) {
+        btnText.textContent = 'Redirection…';
+        window.location.href = data.redirect;
+      } else {
+        showError(data.error || 'Identifiants incorrects');
+      }
+    } catch {
+      showError('Impossible de contacter le serveur.');
+    } finally {
+      btn.disabled = false;
+      btnIcon.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 3 21 3 21 9"/><path d="M10 14 21 3"/><path d="M21 15v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>';
+      btnText.textContent = 'Se connecter';
+    }
+  }
+
+  function showError(msg) {
+    document.getElementById('errorMsg').textContent = msg;
+    document.getElementById('errorBox').classList.add('show');
+  }
+
+  // Shake animation on error
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes shake {
+      0%,100%{transform:translateX(0)}
+      20%{transform:translateX(-6px)}
+      40%{transform:translateX(6px)}
+      60%{transform:translateX(-4px)}
+      80%{transform:translateX(4px)}
+    }
+    .shake { animation: shake .4s ease; }
+  `;
+  document.head.appendChild(style);
+
+  document.getElementById('loginForm').addEventListener('submit', () => {
+    setTimeout(() => {
+      if (document.getElementById('errorBox').classList.contains('show')) {
+        document.getElementById('loginForm').classList.add('shake');
+        setTimeout(() => document.getElementById('loginForm').classList.remove('shake'), 400);
+      }
+    }, 600);
+  });
+</script>
+
+</body>
+</html>
