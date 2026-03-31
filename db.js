@@ -28,11 +28,12 @@ async function initialiserDB() {
 
     // Migrations pour les tables existantes
     const migrations = [
-      `ALTER TABLE signalements ADD COLUMN IF NOT EXISTS type          VARCHAR(20) NOT NULL DEFAULT 'autre'`,
-      `ALTER TABLE signalements ADD COLUMN IF NOT EXISTS suggestion    TEXT`,
-      `ALTER TABLE signalements ADD COLUMN IF NOT EXISTS statut        VARCHAR(20) NOT NULL DEFAULT 'nouveau'`,
-      `ALTER TABLE signalements ADD COLUMN IF NOT EXISTS anonyme       BOOLEAN     NOT NULL DEFAULT FALSE`,
-      `ALTER TABLE signalements ADD COLUMN IF NOT EXISTS date_creation TIMESTAMP   NOT NULL DEFAULT NOW()`,
+      `ALTER TABLE signalements ADD COLUMN IF NOT EXISTS type              VARCHAR(20) NOT NULL DEFAULT 'autre'`,
+      `ALTER TABLE signalements ADD COLUMN IF NOT EXISTS suggestion        TEXT`,
+      `ALTER TABLE signalements ADD COLUMN IF NOT EXISTS statut            VARCHAR(20) NOT NULL DEFAULT 'nouveau'`,
+      `ALTER TABLE signalements ADD COLUMN IF NOT EXISTS anonyme           BOOLEAN     NOT NULL DEFAULT FALSE`,
+      `ALTER TABLE signalements ADD COLUMN IF NOT EXISTS date_creation     TIMESTAMP   NOT NULL DEFAULT NOW()`,
+      `ALTER TABLE signalements ADD COLUMN IF NOT EXISTS type_personnalise TEXT`,
     ];
     for (const sql of migrations) {
       await pool.query(sql);

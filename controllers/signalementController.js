@@ -35,7 +35,7 @@ function genererSuggestion(type) {
 
 // ── POST /signalement ──
 exports.create = async (req, res) => {
-  const { description, anonyme, type: typeParam } = req.body;
+  const { description, anonyme, type: typeParam, type_personnalise } = req.body;
 
   if (!description || description.trim().length < 3) {
     return res.status(400).json({ error: "La description est trop courte (min. 3 caractères)." });
@@ -46,9 +46,12 @@ exports.create = async (req, res) => {
 
   const type       = TYPES_VALIDES.includes(typeParam) ? typeParam : detecterType(description);
   const suggestion = genererSuggestion(type);
+  const typePerso  = (type === 'autre' && type_personnalise && type_personnalise.trim().length > 0)
+    ? type_personnalise.trim().slice(0, 500)
+    : null;
 
   try {
-    const result = await creerSignalement(description.trim(), type, suggestion, anonyme);
+    const result = await creerSignalement(description.trim(), type, suggestion, anonyme, typePerso);
     console.log('[POST /signalement] Inséré id:', result.rows[0].id);
     res.status(201).json(result.rows[0]);
   } catch (err) {

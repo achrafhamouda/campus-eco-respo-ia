@@ -28,5 +28,5 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
-  console.log(`\n🌿 Campus Éco-Responsable lancé sur http://localhost:${PORT}\n`);
+  console.log(`\n Campus Éco-Responsable lancé sur http://localhost:${PORT}\n`);
 });

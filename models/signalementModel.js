@@ -1,10 +1,10 @@
 const pool = require('../db');
 
-const creerSignalement = async (description, type, suggestion, anonyme) => {
+const creerSignalement = async (description, type, suggestion, anonyme, type_personnalise) => {
   return pool.query(
-    `INSERT INTO signalements(description, type, suggestion, anonyme)
-     VALUES($1, $2, $3, $4) RETURNING *`,
-    [description, type, suggestion, anonyme || false]
+    `INSERT INTO signalements(description, type, suggestion, anonyme, type_personnalise)
+     VALUES($1, $2, $3, $4, $5) RETURNING *`,
+    [description, type, suggestion, anonyme || false, type_personnalise || null]
   );
 };
 
